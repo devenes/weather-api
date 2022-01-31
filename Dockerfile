@@ -1,6 +1,11 @@
-FROM python:alpine
-COPY ./app /app
+FROM node:12 as build
+
 WORKDIR /app
-RUN pip install -r requirements.txt
-EXPOSE 80
-CMD python ./weather-app.py 
+COPY package.json index.js ./
+RUN npm install
+
+FROM node:12-alpine
+
+COPY --from=build /app /
+EXPOSE 3456
+ENTRYPOINT [ "node", "index.js" ]
