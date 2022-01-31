@@ -6,17 +6,18 @@ from flask import Flask, render_template, request, json, redirect, url_for
 # Create an object named app
 app = Flask(__name__)
 
+
 # API base URL
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather?"
 
 # City Name
-city = "izmir"
+CITY = "İzmir"
 
 # Your API key
 API_KEY = "99fd063b248c10d275944af7307bc5a6"
 
 # updating the URL
-URL = BASE_URL + "q=" + city + "&appid=" + API_KEY
+URL = BASE_URL + "q=" + CITY + "&appid=" + API_KEY
 
 # Sending HTTP request
 response = requests.get(URL)
@@ -33,7 +34,7 @@ if response.status_code == 200:
     # getting temperature
     temperature = main['temp']
 
-    print(f"{city:-^35}")
+    print(f"{CITY:-^35}")
     print(f"Temperature: {temperature}")
 else:
     # showing the error message
@@ -50,7 +51,7 @@ def home():
 
 
 @app.route('/temperature', methods=['GET', 'POST'])
-def temperature():
+def endpoint():
     return render_template('temperature.html')
 
 
