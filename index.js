@@ -12,7 +12,6 @@ const BASE_URL = "http://api.openweathermap.org/data/2.5/weather?"
 const API_KEY = "99fd063b248c10d275944af7307bc5a6"
 
 
-
 const SendWeatherRequest = async (city) => {
     var clientServerOptions = {
         uri: BASE_URL + "q=" + city + "&appid=" + API_KEY,
@@ -40,10 +39,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.raw());
 
 
-
 app.get('/', (req, res) => {
     var response = {
-        name: 'Enes',
+        fistname: 'Enes',
         lastname: 'Turan'
     }
     res.json(response)
@@ -59,8 +57,8 @@ app.get('/temperature', async (req, res, next) => {
         let coords = weatherData.coord;
         var response = {
             temperature: celsiusData,
-            city: cityname,
-            coords: coords
+            // city: cityname,
+            // coords: coords
         }
         res.status(200).json(response);
     } catch (error) {
