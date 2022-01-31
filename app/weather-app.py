@@ -51,7 +51,7 @@ def home():
     return '{"name":"Enes", "lastname":"Turan"}'
 
 
-@app.route('/temperature', methods=['GET', 'POST'])
+@app.route('/temperature', methods=['GET'])
 def endpoint():
     CITY = request.args.get('city')
     URL = BASE_URL + "q=" + CITY + "&appid=" + API_KEY
@@ -67,11 +67,11 @@ def endpoint():
     # return render_template('temperature.html')
 
 
-@ app.route('/temperature/<string:city>', methods=['GET'])
-def city(city):
-    CITY = request.args.get('city')
+# @ app.route('/temperature/<string:city>', methods=['GET'])
+# def city(city):
+#     CITY = request.args.get('city')
     # return render_template('temperature_city.html', city=city)
-    return f'{city}: {temperature}'
+    # return f'{city}: {temperature}'
     # return '{"{{city}}":"{{temperature}}"}'
 
 
