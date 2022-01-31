@@ -9,11 +9,10 @@
     "author": "Ahmed Enes Turan",
     "license": "ISC",
     "dependencies": {
-        "axios": "^0.21.1",
+        "axios": "^0.25.0",
         "body-parser": "^1.19.0",
         "cors": "^2.8.5",
-        "express": "^4.17.1",
-        "kelvin-to-celsius": "^1.1.0",
-        "request": "^2.88.2"
+        "express": "^4.17.2",
+        "kelvin-to-celsius": "^1.1.0"
     }
 }
