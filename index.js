@@ -68,5 +68,5 @@ app.get('/temperature', async (req, res, next) => {
 })
 
 app.listen(port, () => {
-    console.log(`Bestcloud Academy Case Study App  listening at http://localhost:${port}`)
+    console.log(`Bestcloud Academy Case Study App listening at http://localhost:${port}`)
 })
