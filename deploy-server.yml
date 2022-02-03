@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: >
+  This Cloudformation Template creates a Jenkins Server on EC2 Instance.
+  Jenkins Server is enabled with Git, Docker and Docker Compose,
+  Jenkins Server will run on Amazon Linux 2 EC2 Instance with
+  custom security group allowing HTTP(80, 8080) and SSH (22) connections from anywhere.
+
+Parameters:
+  KeyPairName:
+    Description: Enter the name of your Key Pair for SSH connections.
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: Must one of the existing EC2 KeyPair
+
+Resources:
+  DeployServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH and HTTP for Jenkins Server
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+  DeployServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0a8b4cd432b1c3063 # Amazon Linux 2 AMI (HVM) - Kernel 5.10, SSD Volume Type - ami-0a8b4cd432b1c3063 (64-bit x86) / ami-0b6705f88b1f688c1 (64-bit Arm)
+      InstanceType: t2.micro
+      KeyName: !Ref KeyPairName
+      SecurityGroupIds:
+        - !GetAtt DeployServerSecurityGroup.GroupId
+      Tags:
+        - Key: Name
+          Value: !Sub Deploy Server of ${AWS::StackName}
+        - Key: env
+          Value: prod
+      UserData:
+        Fn::Base64: |
+          #! /bin/bash
+          # update os
+          yum update -y
+          # set deploy server hostname as deploy-server
+          hostnamectl set-hostname deploy-server
+          # install docker
+          amazon-linux-extras install docker -y
+          systemctl start docker
+          systemctl enable docker
+          usermod -a -G docker ec2-user
+          systemctl daemon-reload
+          systemctl restart docker
+          # install nginx
+          amazon-linux-extras install nginx1.12
+          # start nginx
+          systemctl start nginx
+          # enable reverse proxy in nginx.conf
+          sed -i '48i proxy_pass http://localhost:3456/;' etc/nginx/nginx.conf
+          # create docker image and run it
+          docker pull devenes/weather-app:8
+          docker run -d -p 3456:3456 --name enes-deneme-8  devenes/weather-app:8
+          systemctl restart nginx.service
+
+Outputs:
+  DeployServerDNS:
+    Description: Deploy Server DNS Name
+    Value: !Sub
+      - ${PublicAddress}
+      - PublicAddress: !GetAtt DeployServer.PublicDnsName
+  DeployURL:
+    Description: Deploy Server URL
+    Value: !Sub
+      - http://${PublicAddress}:8080
+      - PublicAddress: !GetAtt DeployServer.PublicDnsName
