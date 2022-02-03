@@ -53,6 +53,7 @@ app.get('/temperature', async (req, res, next) => {
         const cityname = req.query.city;
         const weatherData = await SendWeatherRequest(cityname)
         let rawTempData = weatherData.main.temp;
+        // Convert Kelvin to Celsius
         let celsiusData = kelvinToCelsius(rawTempData);
         let coords = weatherData.coord;
         var response = {
@@ -68,5 +69,5 @@ app.get('/temperature', async (req, res, next) => {
 })
 
 app.listen(port, () => {
-    console.log(`Bestcloud Academy Case Study App listening at http://localhost:${port}`)
+    console.log(`Best Cloud Academy Case Study App listening at http://localhost:${port}`)
 })
