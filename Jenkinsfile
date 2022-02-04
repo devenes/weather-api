@@ -17,7 +17,10 @@ pipeline {
         #         --template-body file://${CFN_TEMPLATE} --parameters ParameterKey=KeyPairName,ParameterValue=${CFN_KEYPAIR}
         #         """
         #        1- cloudformation ile container çalışacak ec2, bu adıma uyarla ve ec2 yaml yaz.
-        
+        #        2- ec2 yaml yazıldıktan sonra k8s cluster yaratılır.
+        #        3- k8s cluster yaratıldıktan sonra k8s cluster yapısının yapıldığı ec2'ye ulaşılır.
+        #        4- ec2'ye ulaşıldıktan sonra k8s cluster yapısının yapıldığı ec2'ye ulaşılır.
+               
         #     }
         # }
         stage('Building images and pushing to dockerhub') {
