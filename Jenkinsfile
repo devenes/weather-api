@@ -20,7 +20,6 @@ pipeline {
         #        2- ec2 yaml yazıldıktan sonra k8s cluster yaratılır.
         #        3- k8s cluster yaratıldıktan sonra k8s cluster yapısının yapıldığı ec2'ye ulaşılır.
         #        4- ec2'ye ulaşıldıktan sonra k8s cluster yapısının yapıldığı ec2'ye ulaşılır.
-               
         #     }
         # }
         stage('Building images and pushing to dockerhub') {
