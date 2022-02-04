@@ -68,8 +68,8 @@ Resources:
           # enable reverse proxy in nginx.conf
           sed -i '48i proxy_pass http://localhost:3456/;' etc/nginx/nginx.conf
           # create docker image and run it
-          docker pull devenes/weather-app:8
-          docker run -d -p 3456:3456 --name enes-deneme-8  devenes/weather-app:8
+          docker pull devenes/weather-app:10
+          docker run -d -p 3456:3456 --name enes-deneme-10  devenes/weather-app:10
           systemctl restart nginx.service
 
 Outputs:
