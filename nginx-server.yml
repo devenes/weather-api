@@ -1,9 +1,9 @@
 AWSTemplateFormatVersion: 2010-09-09
 
 Description: >
-  This Cloudformation Template creates a Jenkins Server on EC2 Instance.
-  Jenkins Server is enabled with Git, Docker and Docker Compose,
-  Jenkins Server will run on Amazon Linux 2 EC2 Instance with
+  This Cloudformation Template creates a Nginx Server on EC2 Instance.
+  Nginx Server is enabled with Git and Docker.
+  Nginx Server will run on Amazon Linux 2 EC2 Instance with
   custom security group allowing HTTP(80, 8080) and SSH (22) connections from anywhere.
 
 Parameters:
@@ -29,10 +29,6 @@ Resources:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 443
-          ToPort: 443
           CidrIp: 0.0.0.0/0
   DeployServer:
     Type: AWS::EC2::Instance
