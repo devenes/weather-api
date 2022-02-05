@@ -31,6 +31,7 @@ const SendWeatherRequest = async (city) => {
     }
 };
 
+// Create express app
 const app = express()
 const port = 3456
 app.use(cors())

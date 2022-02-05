@@ -1,14 +1,18 @@
-# best-cloud-academy-api
+# Best Cloud Academy Weather API
 
-![pipeline](pipeline.jpg)
+![pipeline](pipeline.png)
 
-If you want to run the app locally, you can use the following commands:
+If you want to run the application locally, you can use the following commands:
+
 `npm install`
-`npm run start 
-`
 
-To run the containerized application, we need to build a Docker image first.
-We defined the dependencies, requirements, and instructions in the `Dockerfile`:
+`npm run start`
+
+You can see the real-time weather of **Barcelona** in the browser at:
+
+`http://localhost:3456/temperature?city=barcelona`
+
+To containerize the application you need to build a Docker image first. We defined the dependencies, requirements, and instructions in the `Dockerfile`:
 
 ```bash
 FROM node:16-alpine
@@ -26,42 +30,54 @@ CMD [ "node", "index.js" ]
 ```
 
 To build the Docker image you need to use the `docker build` command: 
+
 `docker build -t devenes/weather-app:1 .
 `
-After you have built the Docker image, you can run it using the `docker run` command: 
+
+After you have built the Docker image, run the containerized application using the `docker run` command: 
+
 `docker run -p 3456:3456 devenes/weather-app:1
 `
-After you have run the Docker image as a container, you can access the app using the following URL:
-http://localhost:3456/
 
-To upload the Docker image to Docker Hub, we use the `docker push` command:
+After you have run the Docker image as a container, you can access the app using the following URL on your local machine:
+`http://localhost:3456/`
+
+`http://localhost:3456/temperature?city=barcelona`
+
+To upload the Docker image to Docker Hub, we used the `docker push` command:
+
 `docker push devenes/weather-app:1`
 
-Check out the [Docker Hub Profile](https://hub.docker.com/repository/docker/devenes/weather-app) to see the Docker image and the other versions of the app.
+Check out the [Docker Hub Profile](https://hub.docker.com/repository/docker/devenes/weather-app) to see the Docker image and the other versions of the containerized application.
 
 You can download the Docker image from the Docker Hub using the following command:
+
 `docker pull devenes/weather-app:10`
 
 To stop the container, use the `docker stop` command:
-`docker stop <container_id>
-`
+
+`docker stop <container_id>`
+
 To remove the container, use the `docker rm` command:
-`docker rm <container_id>
-`
+
+`docker rm <container_id>`
+
 To remove the image, use the `docker rmi` command:
-`docker rmi <image_id>
-`
+
+`docker rmi <image_id>`
+
 To remove the image and all the containers that are based on it, use the `docker rmi -f` command:
+
 `docker rmi -f <image_id>`
 
 -----------------------------------------
 
-###CI/CD with GitHub Actions
+## CI/CD with GitHub Actions
 
-We used GitHub Actions to automate the build and deployment of our Docker image to Docker Hub.
+We used GitHub Actions to automate the build and deployment of our Docker image to Docker Hub. We used this configuration in our GitHub Actions workflow to trigger the build and deploy the image to Docker Hub every time we commit to the "release" branch.
 
-We used this configuration in our GitHub Actions workflow to start the build and push when a new release branch is created. 
-Defined the `on` section to run the build and push when a new release branch is created. 
+The `on` and `push` sections are defined to run the trigger when a new commit is created in the "release" branch.
+
 ```bash
 name: Docker Build And Push
 on:
@@ -69,10 +85,8 @@ on:
     branches:
       - "release"
 ```      
-
-
 Wrote the stages to build Docker image and login to Docker Hub.
-To login to Docker Hub you need to define your Docker Hub credentials in the environment variables on GitHub which are called `DOCKER_HUB_USERNAME` and `DOCKER_HUB_PASSWORD`.
+For logining to Docker Hub you need to define your Docker Hub credentials in the environment variables on GitHub settings which are called `DOCKER_HUB_USERNAME` and `DOCKER_HUB_PASSWORD`.
 ```bash
 jobs:
   docker:
@@ -86,23 +100,27 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 ```          
 
+One of the best practices is to name the Docker image tag with using the `run_number` variable in the GitHub workflow to avoid overwriting images and define new versions.
 
-One of the best practices is to use the `run_number` variable on GitHub workflow to name the Docker image tag and avoid overwriting images and define new versions.
 ```bash
-      - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          # use the latest tag from the release branch with run_number
-          tags: devenes/weather-app:${{github.run_number}}
+- name: Build and push
+  uses: docker/build-push-action@v2
+  with:
+    push: true
+    # use the latest tag from the release branch with run_number
+    tags: devenes/weather-app:${{github.run_number}}
 ```  
 -----------------------------------------
-##CI/CD with Jenkins using Webhooks
-An alternative way to build and push the Docker image automatically is to use Webhooks on GitHub to trigger the build and push when a new release branch is created. You need to add a Webhook configuration on your GitHub repository settings with writing the Jenkins Webhook URL in the `Payload URL` section. 
+## CI/CD with Jenkins using Webhooks
+An alternative way to build and push the Docker image automatically is to use Webhooks on GitHub to trigger the build and push when a new commit is added into the "release" branch. You need to add a Webhook configuration on your GitHub repository settings with writing the Jenkins Webhook URL in the `Payload URL` section. 
 
-Your `Payload URL` will appear as: `http://your-jenkins-server:8080/github-webhook/`. But you need to be sure that the plugin is installed and enabled on your Jenkins server.
+Your `Payload URL` will appear as:
 
-Simply when you create a new branch on your GitHub repository, you can trigger the Jenkins pipeline by sending a POST request to the `Payload URL`. It means that every time you commit into a specific branch which you selected on Jenkins settings or any other branch, the Jenkins pipeline will be triggered. By defining the stages on Jenkins pipeline, you can build, push or pull the Docker image or clone your repository automatically. 
+`http://your-jenkins-server:8080/github-webhook/`
+
+But you need to be sure that the plugin is installed and enabled on your Jenkins server.
+
+Simply when you add a new commit on your GitHub repository, you can trigger the Jenkins pipeline by sending a POST request to the `Payload URL`. It means that every time you commit into a specific branch which you selected on Jenkins settings or into any other branch, the Jenkins pipeline will be triggered. By defining the stages on Jenkins pipeline, you can clone your repository automatically or build, push and pull the Docker image.
 
 
 ```bash
@@ -152,16 +170,29 @@ stages {
             sh 'docker run --name best-cloud -d -p 3456:3456 devenes/weather-app:latest'
     }
 }
-```  
+```
+In order to upload the Docker image to Docker Hub in Jenkins pipeline, you need to set your Docker Hub credentials as the environment variables on Jenkins settings named `dockerHubUser` and `dockerHubPassword`.
+
+```bash
+    stage('Docker Push') {
+      agent any
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+          sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+          sh 'docker push devenes/weather-app:latest'
+        }
+      }
+    }
+```
+------------------------------------------------------
+## Getting started with AWS CloudFormation 
+
+The way we chose to implement Jenkins into the CI/CD pipeline is using AWS CloudFormation to create a Stack and deploy it to AWS. The reason we use Cloudformation is to automatically configure and install a server like Nginx and also tools like Git, Docker, and Jenkins. 
+
+Use the `jenkins-server.yml` template file to create a Cloudformation Stack on AWS. 
 
 ------------------------------------------------------
-
-The way we chose to implement Jenkins into the CI/CD pipeline is to use Cloudformation to create a Stack and deploy it to AWS. The reason we use Cloudformation is to automatically configure and install a server like Nginx and also tools like Git, Docker, and Jenkins. 
-
-Use "jenkins-server.yml" file to create a Cloudformation Stack on AWS. 
-
-------------------------------------------------------
-##Reverse Proxy with Nginx
+## Reverse Proxy with Nginx
 
 After running Docker container, we need to configure the app to be available on the Internet. But we will not be configuring the app to be available on the Internet. We will be editing the Nginx configuration file to use a reverse proxy to forward requests to the port which is Nginx listening on.
 
@@ -170,12 +201,12 @@ In the first step, we need to create a new Nginx server and configure it. The ea
 We added the following commands to the Cloudformation template under the `UserData` section:
 
 ```bash
-          # install nginx
-          amazon-linux-extras install nginx1.12
-          # start nginx
-          systemctl start nginx
-          # enable reverse proxy in nginx.conf with adding the following line
-          sed -i '48i proxy_pass http://localhost:3456/;' etc/nginx/nginx.conf
+# install nginx
+amazon-linux-extras install nginx1.12
+# start nginx
+systemctl start nginx
+# enable reverse proxy in nginx.conf with adding the following line
+sed -i '48i proxy_pass http://localhost:3456/;' etc/nginx/nginx.conf
 ```  
 
 The last view of the Nginx configuration file is:
@@ -191,20 +222,22 @@ The last view of the Nginx configuration file is:
         include /etc/nginx/default.d/*.conf;
 
         location / {
-        # the port which is our app working on    
+        # The port which is our app working on    
         proxy_pass http://localhost:3456/;
         }
 ```          
 
-And also if we want to see the result of the app on the Internet, we can add Docker commands to the Cloudformation template under the `UserData` section:
+And also if you want to see the result of the app on the Internet quickly, you can add `Docker pull` and `Docker run` commands into the CloudFormation template under the `UserData` section. So you can quickly see the result of the application on the Internet, without waiting for the manual installation and configuration of resources.
+
 ```bash
-          docker pull devenes/weather-app:10
-          docker run -d -p 3456:3456 --name enes-10  devenes/weather-app:10
+docker pull devenes/weather-app:10
+docker run -d -p 3456:3456 --name weather-app-10 devenes/weather-app:10
 ```
 
-At the end of the Cloudformation template, we need to add the following commands to the `UserData` section for restarting the Nginx server to be able to see the result of the app on the Internet:
+At the end of the CloudFormation template, we need to add the following commands to the `UserData` section for restarting the Nginx server to be able to see the result of the app on the Internet with reverse proxy on port 80:
 ```bash
-          systemctl restart nginx.service
+systemctl restart nginx.service
 ```
-
+------------------------------------------------------
+## Output on the live server
 
