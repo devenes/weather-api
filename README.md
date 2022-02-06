@@ -175,7 +175,7 @@ In other way you can set your credential ID on Jenkins pipeline as the environme
 ```
 - You may face the following error when you try to push the Docker image to Docker Hub.
  `denied: requested access to the resource is denied` 
- The solution that I tried is you can follow to use the `docker login` command to login to Docker Hub and then use the `docker push` command to push the Docker image to Docker Hub manually. Or you can use the `docker logout` command to logout from Docker Hub. And build your Docker image again. After that, you can use the `docker login` command to login to Docker Hub again and then use the `docker push` command to push the Docker image to Docker Hub. You refresh the Docker Hub credentials on your machine and then you can push the Docker image to Docker Hub.
+ The solution that I tried, you can follow to use the `docker login` command to login to Docker Hub and then use the `docker push` command to push the Docker image to Docker Hub manually. Or you can use the `docker logout` command to logout from Docker Hub. And build your Docker image again. After that, you can use the `docker login` command to login to Docker Hub again and then use the `docker push` command to push the Docker image to Docker Hub. You refresh the Docker Hub credentials on your machine and then you can push the Docker image to Docker Hub.
 
 ------------------------------------------------------
 ## Getting started with AWS CloudFormation 
