@@ -29,15 +29,10 @@ pipeline {
         }
       }
     }
-    stage('Run Image') {
+    stage('Run Container') {
       steps{
-        script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.run()
-          }
-        }
+        sh "docker run -d -p 3456:3456 --name $dockerImage:$BUILD_NUMBER"
       }
     }
   }
 }
-// Language: Groovy
