@@ -1,9 +1,8 @@
 AWSTemplateFormatVersion: 2010-09-09
 
 Description: >
-  This Cloudformation Template creates a Nginx Server on EC2 Instance.
-  Nginx Server is enabled with Git and Docker.
-  Nginx Server will run on Amazon Linux 2 EC2 Instance with
+  This Cloudformation Template creates a Nginx Server and Jenkins on EC2 Instance.
+  Nginx Server and Jenkins will run on Amazon Linux 2 EC2 Instance with
   custom security group allowing HTTP(80, 8080) and SSH (22) connections from anywhere.
 
 Parameters:
@@ -80,8 +79,8 @@ Resources:
           # enable reverse proxy in nginx.conf
           sed -i '48i proxy_pass http://localhost:3456/;' etc/nginx/nginx.conf
           # create docker image and run it
-          docker pull devenes/weather-app:10
-          docker run -d -p 3456:3456 --name enes-deneme-10  devenes/weather-app:10
+          docker pull devenes/weather-app:20
+          docker run -d -p 3456:3456 --name weather-app devenes/weather-app:20
           systemctl restart nginx.service
 
 Outputs:
