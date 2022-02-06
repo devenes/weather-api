@@ -3,8 +3,7 @@ pipeline {
     registry = "devenes/weather-app"
     registryCredential = 'dockerHub'
     dockerImage = ''
-    dockerfile = 'Dockerfile'
-    dockerfilePath = '.'    
+    dockerfile = 'Dockerfile'     
    }
    agent any  
    stages {
