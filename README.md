@@ -235,9 +235,6 @@ systemctl restart nginx.service
 ------------------------------------------------------
 ## Output on the live server
 
-http://ec2-100-26-22-170.compute-1.amazonaws.com
-
-http://ec2-100-26-22-170.compute-1.amazonaws.com/temperature?city=madrid
 
 ![names](/readme/names.png)
 
