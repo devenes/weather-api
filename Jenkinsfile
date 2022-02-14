@@ -1,37 +1,33 @@
 pipeline {
-  environment {
-    registry = "devenes/weather-app"
-    registryCredential = 'dockerHub'
-    dockerImage = ''
-    dockerfile = 'Dockerfile'
-    dockerfilePath = '.'    
-   }
-   agent any  
-   stages {
-    stage('Cloning Git') {
+  agent any
+  stages {
+    stage("Stop Running Container") {
       steps {
-        git 'https://github.com/devenes/best-cloud-academy-api.git'
+        sh "docker stop weather-app"
       }
     }
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        }
+    stage("Delete Running Container") {
+      steps {
+        sh "docker rm weather-app"
       }
     }
-    stage('Deploy Image') {
-      steps{
-         script {
-            docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
-          }
-        }
+    stage("Delete Image") {
+      steps {
+        sh "echo y | docker image prune -a"        
       }
     }
-    stage('Run Container') {
-      steps{
-        sh "docker run -d -p 3456:3456 --name $dockerImage:$BUILD_NUMBER"
+    stage("pull") {
+      steps {
+        sh """
+          docker pull devenes/weather-app:20
+        """
+      }
+    }
+    stage("run") {
+      steps {
+        sh """
+          docker run --name weather-app -d -p 3456:3456 devenes/weather-app:20
+        """
       }
     }
   }
