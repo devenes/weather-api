@@ -27,4 +27,4 @@ jobs:
         uses: wei/curl@v1
         with:
         # args: https://jsonplaceholder.typicode.com/todos/1
-          args: http://174.129.150.238:8080/generic-webhook-trigger/invoke?token=${{secrets.JENKINS_TOKEN}}&version=${{github.run_number}}
+          args: http://174.129.150.238:8080/generic-webhook-trigger/invoke -d 'token=${{secrets.JENKINS_TOKEN}}&version=${{github.run_number}}'
