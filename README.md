@@ -120,7 +120,7 @@ Your `Payload URL` will appear as:
 
 - You need to be sure that GitHub plugin is installed and enabled on your Jenkins server: https://plugins.jenkins.io/github/
 
-Simply when you add a new commit on your GitHub repository, you can trigger the Jenkins pipeline by sending a POST request to the `Payload URL`. It means that every time you commit into a specific branch which you selected on Jenkins settings or into any other branch, the Jenkins pipeline will be triggered. By defining the stages on Jenkins pipeline, you can clone your repository automatically or build, push and pull the Docker image.
+Simply when you add a new commit on your GitHub repository, you can trigger the Jenkins pipeline by sending a GET request to the `Payload URL`. It means that every time you commit into a specific branch which you selected on Jenkins settings or into any other branch, the Jenkins pipeline will be triggered. By defining the stages on Jenkins pipeline, you can clone your repository automatically or build, push and pull the Docker image.
 
 - Install the Docker Pipelines plugin on Jenkins which allows building, testing, and using Docker images from Jenkins Pipeline projects:
 https://plugins.jenkins.io/docker-workflow/
