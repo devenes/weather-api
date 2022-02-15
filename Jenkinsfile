@@ -19,14 +19,14 @@ pipeline {
     stage("pull") {
       steps {
         sh """
-          docker pull devenes/weather-app:20
+          docker pull devenes/weather-app:$version
         """
       }
     }
     stage("run") {
       steps {
         sh """
-          docker run --name weather-app -d -p 3456:3456 devenes/weather-app:20
+          docker run --name weather-app -d -p 3456:3456 devenes/weather-app:$version
         """
       }
     }
