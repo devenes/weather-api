@@ -49,6 +49,14 @@ app.get('/', (req, res) => {
 })
 
 
+app.get('/bestcloudforme', (req, res) => {
+    var response = {
+        message: 'Best Cloud Case Study'
+    }
+    res.json(response)
+})
+
+
 app.get('/temperature', async (req, res, next) => {
     try {
         const cityname = req.query.city;
