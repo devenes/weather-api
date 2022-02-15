@@ -6,7 +6,7 @@ pipeline {
         sh "docker stop weather-app"
       }
     }
-    stage("Delete Running Container") {
+    stage("Delete Container") {
       steps {
         sh "docker rm weather-app"
       }
@@ -16,19 +16,19 @@ pipeline {
         sh "echo y | docker image prune -a"        
       }
     }
-    stage("pull") {
+    stage("Pull Image") {
       steps {
         sh """
           docker pull devenes/weather-app:$version
         """
       }
     }
-    stage("run") {
+    stage("Run Container") {
       steps {
         sh """
           docker run --name weather-app -d -p 3456:3456 devenes/weather-app:$version
         """
       }
-    }
+    }    
   }
 }
