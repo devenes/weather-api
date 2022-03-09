@@ -49,9 +49,9 @@ app.get('/', (req, res) => {
 })
 
 
-app.get('/bestcloudforme', (req, res) => {
+app.get('/enes', (req, res) => {
     var response = {
-        message: 'Best Cloud Case Study'
+        message: 'Ahmed Enes Turan'
     }
     res.json(response)
 })
