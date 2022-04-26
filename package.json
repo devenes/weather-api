@@ -4,7 +4,8 @@
     "description": "30.01.2022",
     "main": "index.js",
     "scripts": {
-        "start": "node index.js"
+        "start": "node index.js",
+        "test": "node index.js"
     },
     "author": "Ahmed Enes Turan",
     "license": "ISC",
